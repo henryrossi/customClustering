@@ -1,0 +1,27 @@
+---
+title: "Project 3"
+output: html_document
+---
+
+My custom clustering function (cluster) runs many iterations of a random clustering algorithm
+and chooses the best assignment based on separation, in this case average distance between cluster
+centers, and compactness, in this case average within sum of squares for each cluster.
+
+The user can specify whether or not they would like PCA to be done to the data before clustering using
+the pca option. They can also specify the number of iterations ran. The last thing the user can specify
+is the options a and b which are the weights for separation and compactness in the measurement for
+determining the best cluster. Clusters are measured by the formula (a * separation) / (b * 
+compactness), so a larger value of a places more weight on separation while a smaller value of b places
+more weight on compactness. A larger value from this formula represents a better clustering.
+
+```{r include=FALSE}
+library(customClustering)
+library(tidyverse)
+```
+
+```{r}
+cluster(iris %>% select(-Species), 3)
+```
+```{r}
+cluster(mtcars, 4, pca = TRUE, iterations = 1000)
+```
