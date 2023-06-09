@@ -2,7 +2,8 @@
 % Please edit documentation in R/cluster.R
 \name{principleComponents}
 \alias{principleComponents}
-\title{Converts data of many dimensions into 2-dimensional data containing the 2 most principle components}
+\title{Converts data of many dimensions into 2-dimensional data containing the
+2 most principle components}
 \usage{
 principleComponents(data)
 }
@@ -13,5 +14,6 @@ principleComponents(data)
 A matrix containing the 2 most principle component
 }
 \description{
-Converts data of many dimensions into 2-dimensional data containing the 2 most principle components
+Converts data of many dimensions into 2-dimensional data containing the
+2 most principle components
 }

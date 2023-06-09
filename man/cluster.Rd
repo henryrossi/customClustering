@@ -4,14 +4,24 @@
 \alias{cluster}
 \title{Implements custom clustering algorithm}
 \usage{
-cluster(data, k, maxIteratoins = 100)
+cluster(data, k, pca = FALSE, iterations = 100, a = 1, b = 0.5)
 }
 \arguments{
 \item{data}{A data frame}
 
 \item{k}{An integer indicating the number of clusters}
 
-\item{maxIterations}{An integer indicating the number of iterations}
+\item{pca}{A boolean value representing whether or not to perform PCA
+on the data before the clustering}
+
+\item{iterations}{An integer indicating the number of iterations}
+
+\item{a}{An integer indicating the weight separation (average distance
+between cluster centers) has when measuring the quality of the
+cluster}
+
+\item{b}{An integer indicating the weight compactness (average within
+sum of squares) has when measuring the quality of the cluster}
 }
 \value{
 A list containing the cluster assignments

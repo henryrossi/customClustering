@@ -2,12 +2,21 @@
 #'
 #' @param data A data frame
 #' @param k An integer indicating the number of clusters
-#' @param maxIterations An integer indicating the number of iterations
+#' @param pca A boolean value representing whether or not to perform PCA
+#'        on the data before the clustering
+#' @param iterations An integer indicating the number of iterations
+#' @param a An integer indicating the weight separation (average distance
+#'        between cluster centers) has when measuring the quality of the
+#'        cluster
+#' @param b An integer indicating the weight compactness (average within
+#'        sum of squares) has when measuring the quality of the cluster
 #'
 #' @return A list containing the cluster assignments
 #'
+#' @importFrom Rfast dista
+#'
 #' @export
-cluster <- function(data, k, maxIteratoins = 100){
+cluster <- function(data, k, pca = FALSE, iterations = 100, a = 1, b = 0.5){
   # Check inputs
   if (!is.data.frame(data)){
     stop("Please enter your data as a data frame")
@@ -15,29 +24,38 @@ cluster <- function(data, k, maxIteratoins = 100){
   if (!is.numeric(k)){
     stop("Please enter a numeric value for k")
   }
-  if (!is.numeric(maxIteratoins)){
-    stop("Please enter a numeric value for maxIterations")
+  if (!is.logical(pca)){
+    stop("Please enter a logical value for the option pca")
+  }
+  if (!is.numeric(iterations)){
+    stop("Please enter a numeric value for iterations")
+  }
+  if (!is.numeric(a) && !is.numeric(b)){
+    stop("Please enter a numeric value for a and b")
   }
   if ("character" %in% sapply(data, class)){
     stop("Please only enter numeric variables in your data frame")
   }
 
-  data <- principleComponents(data)
+  if (pca) {
+    data <- principleComponents(data)
+  }
+  data <- as.matrix(data)
 
   bestClusterMeasure <- 0
-  a <- 1
-  b <- 0.5
 
-  for (x in 1:maxIteratoins){
+  for (x in 1:iterations){
     clusterOutput <- kClusters(data, k)
 
     # calculate cluster measure
-    centroidDists <- Rfast::dista(clusterOutput$centroids, clusterOutput$centroids)
-    seperation <- sum(centroidDists) / (2*nrow(centroidDists))
-    compactness <- mean(rowSums((data - clusterOutput$centroids[clusterOutput$clusterAssignments, ]) ^ 2))
-    clusterMeasure <- (a * seperation) / (b * compactness)
+    centroidDists <- dista(clusterOutput$centroids, clusterOutput$centroids)
+    separation <- sum(centroidDists) / (2*nrow(centroidDists))
+    compactness <- mean(rowSums(
+      (data - clusterOutput$centroids[clusterOutput$clusterAssignments, ]) ^ 2))
+    clusterMeasure <- (a * separation) / (b * compactness)
 
-    if (!is.na(clusterMeasure) && !is.na(bestClusterMeasure && clusterMeasure > bestClusterMeasure)){
+    if (!is.na(clusterMeasure) && !is.na(bestClusterMeasure
+                         && clusterMeasure > bestClusterMeasure)){
       bestClusterMeasure <- clusterMeasure
       bestClustering <- clusterOutput
     }
@@ -46,7 +64,8 @@ cluster <- function(data, k, maxIteratoins = 100){
   return(bestClustering)
 }
 
-#' Converts data of many dimensions into 2-dimensional data containing the 2 most principle components
+#' Converts data of many dimensions into 2-dimensional data containing the
+#' 2 most principle components
 #'
 #' @param data A data frame
 #'
@@ -62,6 +81,8 @@ principleComponents <- function(data) {
 #' @param data A matrix containing the 2 most principle components
 #' @param k An integer indicating the number of clusters
 #'
+#' @importFrom Rfast dista
+#'
 #' @return A list containing the clustering assignments and the centroids
 #'
 kClusters <- function(data, k) {
@@ -71,7 +92,7 @@ kClusters <- function(data, k) {
   converged <- FALSE
   while (!converged) {
     # Assign each data point to the nearest centroid
-    distances <- Rfast::dista(data, centroids)
+    distances <- dista(data, centroids)
     clusterAssignments <- apply(distances, 1, which.min)
 
     # Update centroids based on the mean of the assigned data points

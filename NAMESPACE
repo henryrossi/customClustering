@@ -2,4 +2,5 @@
 
 export("%>%")
 export(cluster)
+importFrom(Rfast,dista)
 importFrom(magrittr,"%>%")
