@@ -1,0 +1,14 @@
+
+```{r}
+debugonce(cluster)
+```
+
+```{r}
+library(customClustering)
+library(tidyverse)
+data <- iris %>% select(-Species)
+```
+
+```{r}
+cluster(data, 3, 100)
+```

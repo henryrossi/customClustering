@@ -10,7 +10,7 @@ principleComponents(data)
 \item{data}{A data frame}
 }
 \value{
-A data frame containing the 2 most principle component
+A matrix containing the 2 most principle component
 }
 \description{
 Converts data of many dimensions into 2-dimensional data containing the 2 most principle components

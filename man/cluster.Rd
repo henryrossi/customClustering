@@ -4,12 +4,14 @@
 \alias{cluster}
 \title{Implements custom clustering algorithm}
 \usage{
-cluster(data, k)
+cluster(data, k, maxIteratoins = 100)
 }
 \arguments{
 \item{data}{A data frame}
 
 \item{k}{An integer indicating the number of clusters}
+
+\item{maxIterations}{An integer indicating the number of iterations}
 }
 \value{
 A list containing the cluster assignments
